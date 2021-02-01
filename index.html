@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Recursive tree visualization</title>
+</head>
+<body>
+
+  <div id="tree"></div>
+  <link rel="stylesheet" type="text/css" href="vis.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+  <script src="vis.js"></script>  
+  <script>
+var searchParams = new URLSearchParams(window.location.search);
+var filename = searchParams.get("filename") || "fib5.json";
+var width = parseInt(searchParams.get("width"), 10) || document.body.clientWidth; 
+
+fetch(filename)
+  .then(response => response.json())
+  .then(data => {
+    var treeViz = new RecursiveTreeViz(document.getElementById("tree"), data, width);
+    treeViz.draw();
+});
+  </script>
+</body>
+</html>

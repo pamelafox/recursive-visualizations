@@ -1,0 +1,34 @@
+.node {
+    background: white;
+    border: 2px solid #ccc;
+    color: #757575;
+    border-radius: 120px;
+    position: absolute;
+    left: 0;
+    width: 50px;
+    height: 25px;
+    text-align: center;
+    font-family: monospace;
+    padding: 10px 10px 0px 10px;
+    z-index: 1;
+}
+
+
+.node-activated {
+    color: #12bf96;
+    border: 2px solid #12bf96;
+}
+
+.jtk-connector {
+    z-index: 0;
+
+}
+
+.jtk-connector-activated {
+    z-index: 0;
+    color: turquoise;
+}
+
+input[type=range] {
+    vertical-align:middle;
+}

@@ -1,0 +1,35 @@
+{
+  "label":"fib(4)",
+  "children":[
+    {
+      "label":"fib(3)",
+      "children":[
+        {
+          "label":"fib(2)",
+          "children":[
+            {
+              "label":"fib(1)"
+            },
+            {
+              "label":"fib(0)"
+            }
+          ]
+        },
+        {
+          "label":"fib(1)"
+        }
+      ]
+    },
+    {
+      "label":"fib(2)",
+      "children":[
+        {
+          "label":"fib(1)"
+        },
+        {
+          "label":"fib(0)"
+        }
+      ]
+    }
+  ]
+}
