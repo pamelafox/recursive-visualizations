@@ -15,11 +15,12 @@
 var searchParams = new URLSearchParams(window.location.search);
 var filename = searchParams.get("filename") || "fib5.json";
 var width = parseInt(searchParams.get("width"), 10) || document.body.clientWidth; 
+var startStep = parseInt(searchParams.get("start"), 10);
 
 fetch(filename)
   .then(response => response.json())
   .then(data => {
-    var treeViz = new RecursiveTreeViz(document.getElementById("tree"), data, width);
+    var treeViz = new RecursiveTreeViz(document.getElementById("tree"), data, {width: width, startStep: startStep});
     treeViz.draw();
 });
   </script>

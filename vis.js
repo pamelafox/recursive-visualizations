@@ -1,10 +1,12 @@
 
 class RecursiveTreeViz {
   
-  constructor(div, tree, width) {
+  constructor(div, tree, options) {
     this.div = div;
     this.tree = tree;
-    this.width = width;
+    options = options || {};
+    this.width = options.width;
+    this.startStep = options.startStep;
     this.plumber = jsPlumb.getInstance();
     this.maxTop = 0;
     this.steps = [];
@@ -12,13 +14,19 @@ class RecursiveTreeViz {
   
   draw() {
     this.drawNode(this.tree, 0, this.width/2);
+    if (this.startStep == null) {
+      this.currentStep = this.steps.length - 1;
+    } else {
+      this.currentStep = this.startStep;
+    }
     this.drawControls();
+    this.toggleSteps();
   }
   
   drawNode(nodeInfo, depth, x, parentDiv) {
     var div = document.createElement("div");
     div.innerText = nodeInfo.label;
-    div.className = "node node-activated";
+    div.className = "node";
     var y = depth * 70;
     div.style.top = y + "px";
     this.maxTop = Math.max(y, this.maxTop);
@@ -35,7 +43,7 @@ class RecursiveTreeViz {
               source: parentDiv, target: div,
               anchor: "Center", endpoint: "Blank",
               connector: ["Straight"],
-              paintStyle:{ stroke:"#12bf96", strokeWidth:2 }
+              paintStyle:{ stroke:"#ccc", strokeWidth:2 }
           });
     }
     if (nodeInfo.children) {
@@ -50,7 +58,6 @@ class RecursiveTreeViz {
   }
   
   drawControls() {
-    this.currentStep = this.steps.length - 1;
     var controlsDiv = document.createElement("div");
     controlsDiv.style.position = "absolute";
     controlsDiv.style.left = (this.width/2 - 100) + "px";
@@ -58,11 +65,16 @@ class RecursiveTreeViz {
     
     this.prevButton = document.createElement("button");
     this.prevButton.innerText = "< Prev";
+    if (this.currentStep <= 0) {
+      this.prevButton.setAttribute("disabled", "disabled");
+    }
     this.prevButton.addEventListener("click", this.onPrevClick.bind(this));
     
     this.nextButton = document.createElement("button");
     this.nextButton.innerText = "> Next";
-    this.nextButton.setAttribute("disabled", "disabled");
+    if (this.currentStep >= this.steps.length - 1) {
+      this.nextButton.setAttribute("disabled", "disabled");
+    }
     this.nextButton.addEventListener("click", this.onNextClick.bind(this));
 
     this.slider = document.createElement("input");
