@@ -6,6 +6,7 @@ class RecursiveTreeViz {
     this.tree = tree;
     options = options || {};
     this.width = options.width;
+    this.nodeWidth = 74;
     this.startStep = options.startStep;
     this.funcName = options.funcName;
     this.plumber = jsPlumb.getInstance();
@@ -25,7 +26,6 @@ class RecursiveTreeViz {
   }
   
   drawNode(nodeInfo, depth, x, parentDiv) {
-
     var div = document.createElement("div");
     let label = nodeInfo.label;
     if (this.funcName) {
@@ -37,7 +37,9 @@ class RecursiveTreeViz {
     var y = depth * 70;
     div.style.top = y + "px";
     this.maxTop = Math.max(y, this.maxTop);
-    div.style.left = (x) + "px";
+    div.style.left = (x - this.nodeWidth/2) + "px";
+    div.addEventListener("click", this.highlightNode.bind(this));
+    div.addEventListener("mouseover", this.highlightNode.bind(this));
     this.div.appendChild(div);
     
     nodeInfo.div = div;
@@ -55,11 +57,15 @@ class RecursiveTreeViz {
     }
     if (nodeInfo.children) {
       var childDepth = depth + 1;
-      var numMargins = 2 * childDepth;
-      var spaceBetween = this.width / ( Math.pow(nodeInfo.children.length, childDepth) );
-      var childrenStartX = x - (spaceBetween/2);
+      var maxChildrenAtDepth = Math.pow(nodeInfo.children.length, childDepth);
+      var spaceBetween = (this.width - (this.nodeWidth * maxChildrenAtDepth)) / ( maxChildrenAtDepth + 1);
+      var theseChildrenSpace = (this.nodeWidth * nodeInfo.children.length) + (spaceBetween * (nodeInfo.children.length + 1));
+      var childrenStartX = x - (spaceBetween/2 + this.nodeWidth/2);
+      if (nodeInfo.children.length === 3) {
+        childrenStartX = x - (spaceBetween + this.nodeWidth);
+      }
       nodeInfo.children.forEach((child, i) => 
-         this.drawNode(child, childDepth, (childrenStartX + i * spaceBetween), div)
+         this.drawNode(child, childDepth, (childrenStartX + i * (spaceBetween + this.nodeWidth)), div)
       );
     }
   }
@@ -67,7 +73,7 @@ class RecursiveTreeViz {
   drawControls() {
     var controlsDiv = document.createElement("div");
     controlsDiv.style.position = "absolute";
-    controlsDiv.style.left = (this.width/2 - 100) + "px";
+    controlsDiv.style.left = (this.width/2 - 125) + "px";
     controlsDiv.style.top = this.maxTop + 50 + "px";
     
     this.prevButton = document.createElement("button");
@@ -95,6 +101,14 @@ class RecursiveTreeViz {
     controlsDiv.appendChild(this.slider);
     controlsDiv.appendChild(this.nextButton);
     this.div.appendChild(controlsDiv);
+  }
+
+  highlightNode(event) {
+    const node = event.target;
+    this.steps.forEach((step, stepI) => {
+      step.div.style.zIndex = 1;
+    });
+    node.style.zIndex = 300;
   }
 
   toggleSteps() {
