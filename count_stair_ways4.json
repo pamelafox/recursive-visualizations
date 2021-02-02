@@ -1,0 +1,27 @@
+{
+  "label": "count_stair_ways(4)",
+  "id": "0x7fdf3548a240->0x7fdf35061440",
+  "children": [
+    {
+      "label": "count_stair_ways(3)",
+      "id": "0x7fdf3530d3d0->0x7fdf3548a240->0x7fdf35061440",
+      "children": [
+        {
+          "label": "count_stair_ways(2)",
+          "id": "0x7fdf335cddc0->0x7fdf3530d3d0->0x7fdf3548a240->0x7fdf35061440",
+          "children": []
+        },
+        {
+          "label": "count_stair_ways(1)",
+          "id": "0x7fdf335cddc0->0x7fdf3530d3d0->0x7fdf3548a240->0x7fdf35061440",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "count_stair_ways(2)",
+      "id": "0x7fdf335cddc0->0x7fdf3548a240->0x7fdf35061440",
+      "children": []
+    }
+  ]
+}

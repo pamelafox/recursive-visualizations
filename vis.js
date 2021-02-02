@@ -7,6 +7,7 @@ class RecursiveTreeViz {
     options = options || {};
     this.width = options.width;
     this.startStep = options.startStep;
+    this.funcName = options.funcName;
     this.plumber = jsPlumb.getInstance();
     this.maxTop = 0;
     this.steps = [];
@@ -14,18 +15,24 @@ class RecursiveTreeViz {
   
   draw() {
     this.drawNode(this.tree, 0, this.width/2);
-    if (this.startStep == null) {
+    if (this.startStep == null || isNaN(this.startStep)) {
       this.currentStep = this.steps.length - 1;
     } else {
       this.currentStep = this.startStep;
     }
+    debugger;
     this.drawControls();
     this.toggleSteps();
   }
   
   drawNode(nodeInfo, depth, x, parentDiv) {
+
     var div = document.createElement("div");
-    div.innerText = nodeInfo.label;
+    let label = nodeInfo.label;
+    if (this.funcName) {
+      label = this.funcName + "(" + label.split("(")[1]
+    }
+    div.innerText = label;
     div.className = "node";
     var y = depth * 70;
     div.style.top = y + "px";
