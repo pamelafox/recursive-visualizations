@@ -20,7 +20,6 @@ class RecursiveTreeViz {
     } else {
       this.currentStep = this.startStep;
     }
-    debugger;
     this.drawControls();
     this.toggleSteps();
   }
@@ -32,6 +31,7 @@ class RecursiveTreeViz {
     if (this.funcName) {
       label = this.funcName + "(" + label.split("(")[1]
     }
+    label = label.replace(", ", ",");
     div.innerText = label;
     div.className = "node";
     var y = depth * 70;
@@ -56,7 +56,7 @@ class RecursiveTreeViz {
     if (nodeInfo.children) {
       var childDepth = depth + 1;
       var numMargins = 2 * childDepth;
-      var spaceBetween = this.width / ( Math.pow(2, childDepth) );
+      var spaceBetween = this.width / ( Math.pow(nodeInfo.children.length, childDepth) );
       var childrenStartX = x - (spaceBetween/2);
       nodeInfo.children.forEach((child, i) => 
          this.drawNode(child, childDepth, (childrenStartX + i * spaceBetween), div)

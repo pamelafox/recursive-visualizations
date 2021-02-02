@@ -1,0 +1,69 @@
+{
+  "label": "count_k(3, 3)",
+  "id": "0x7f9827c8a240->0x7f9825f61440",
+  "children": [
+    {
+      "label": "count_k(2, 3)",
+      "id": "0x7f9825c1db30->0x7f9827c8a240->0x7f9825f61440",
+      "children": [
+        {
+          "label": "count_k(1, 3)",
+          "id": "0x7f9827f3ce40->0x7f9825c1db30->0x7f9827c8a240->0x7f9825f61440",
+          "children": [
+            {
+              "label": "count_k(0, 3)",
+              "id": "0x7f9827f3cc80->0x7f9827f3ce40->0x7f9825c1db30->0x7f9827c8a240->0x7f9825f61440",
+              "children": []
+            },
+            {
+              "label": "count_k(-1, 3)",
+              "id": "0x7f9827f3cc80->0x7f9827f3ce40->0x7f9825c1db30->0x7f9827c8a240->0x7f9825f61440",
+              "children": []
+            },
+            {
+              "label": "count_k(-2, 3)",
+              "id": "0x7f9827f3cc80->0x7f9827f3ce40->0x7f9825c1db30->0x7f9827c8a240->0x7f9825f61440",
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "count_k(0, 3)",
+          "id": "0x7f9827f3cc80->0x7f9825c1db30->0x7f9827c8a240->0x7f9825f61440",
+          "children": []
+        },
+        {
+          "label": "count_k(-1, 3)",
+          "id": "0x7f9827f3cc80->0x7f9825c1db30->0x7f9827c8a240->0x7f9825f61440",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "count_k(1, 3)",
+      "id": "0x7f9827f3cc80->0x7f9827c8a240->0x7f9825f61440",
+      "children": [
+        {
+          "label": "count_k(0, 3)",
+          "id": "0x7f9825c1db30->0x7f9827f3cc80->0x7f9827c8a240->0x7f9825f61440",
+          "children": []
+        },
+        {
+          "label": "count_k(-1, 3)",
+          "id": "0x7f9825c1db30->0x7f9827f3cc80->0x7f9827c8a240->0x7f9825f61440",
+          "children": []
+        },
+        {
+          "label": "count_k(-2, 3)",
+          "id": "0x7f9825c1db30->0x7f9827f3cc80->0x7f9827c8a240->0x7f9825f61440",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "count_k(0, 3)",
+      "id": "0x7f9825c1db30->0x7f9827c8a240->0x7f9825f61440",
+      "children": []
+    }
+  ]
+}
