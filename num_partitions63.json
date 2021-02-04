@@ -1,0 +1,126 @@
+{
+  "label": "num_partitions(6, 3)",
+  "id": "0x7f83c6c8a240->0x7f83c6a61440",
+  "children": [
+    {
+      "label": "num_partitions(3, 3)",
+      "id": "0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+      "children": [
+        {
+          "label": "num_partitions(0, 3)",
+          "id": "0x7f83c6f3de40->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+          "children": [
+            {
+              "label": "num_partitions(-3, 3)",
+              "id": "0x7f83c6f3dc80->0x7f83c6f3de40->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+              "children": [
+                {
+                  "label": "num_partitions(-2, 2)",
+                  "id": "0x7f83c6f713c0->0x7f83c6f3dc80->0x7f83c6f3de40->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+                  "children": []
+                },
+                {
+                  "label": "num_partitions(0, 1)",
+                  "id": "0x7f83c6f713c0->0x7f83c6f3dc80->0x7f83c6f3de40->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "label": "num_partitions(0, 2)",
+              "id": "0x7f83c6f3dc80->0x7f83c6f3de40->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+              "children": [
+                {
+                  "label": "num_partitions(-2, 2)",
+                  "id": "0x7f83c6f713c0->0x7f83c6f3dc80->0x7f83c6f3de40->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+                  "children": []
+                },
+                {
+                  "label": "num_partitions(0, 1)",
+                  "id": "0x7f83c6f713c0->0x7f83c6f3dc80->0x7f83c6f3de40->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "num_partitions(3, 2)",
+          "id": "0x7f83c6f713c0->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+          "children": [
+            {
+              "label": "num_partitions(1, 2)",
+              "id": "0x7f83c6f71580->0x7f83c6f713c0->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+              "children": [
+                {
+                  "label": "num_partitions(-1, 2)",
+                  "id": "0x7f83c6f3de40->0x7f83c6f71580->0x7f83c6f713c0->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+                  "children": []
+                },
+                {
+                  "label": "num_partitions(1, 1)",
+                  "id": "0x7f83c6f3de40->0x7f83c6f71580->0x7f83c6f713c0->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "label": "num_partitions(3, 1)",
+              "id": "0x7f83c6f3de40->0x7f83c6f713c0->0x7f83c6918c30->0x7f83c6c8a240->0x7f83c6a61440",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "num_partitions(6, 2)",
+      "id": "0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+      "children": [
+        {
+          "label": "num_partitions(4, 2)",
+          "id": "0x7f83c6918c30->0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+          "children": [
+            {
+              "label": "num_partitions(2, 2)",
+              "id": "0x7f83c6f71200->0x7f83c6918c30->0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+              "children": [
+                {
+                  "label": "num_partitions(0, 2)",
+                  "id": "0x7f83c6f71740->0x7f83c6f71200->0x7f83c6918c30->0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+                  "children": [
+                    {
+                      "label": "num_partitions(-2, 2)",
+                      "id": "0x7f83c6f713c0->0x7f83c6f71740->0x7f83c6f71200->0x7f83c6918c30->0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+                      "children": []
+                    },
+                    {
+                      "label": "num_partitions(0, 1)",
+                      "id": "0x7f83c6f713c0->0x7f83c6f71740->0x7f83c6f71200->0x7f83c6918c30->0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "label": "num_partitions(2, 1)",
+                  "id": "0x7f83c6f713c0->0x7f83c6f71200->0x7f83c6918c30->0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "label": "num_partitions(4, 1)",
+              "id": "0x7f83c6f713c0->0x7f83c6918c30->0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "num_partitions(6, 1)",
+          "id": "0x7f83c6f713c0->0x7f83c6f3de40->0x7f83c6c8a240->0x7f83c6a61440",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

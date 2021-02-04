@@ -1,0 +1,54 @@
+{
+  "label": "mg(1, 0, 0, 300)",
+  "id": "0x7fc56f68a240->0x7fc56f459440",
+  "children": [
+    {
+      "label": "mg(0, 0, 0, 150)",
+      "id": "0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+      "children": [
+        {
+          "label": "t(0, 0, 150)",
+          "id": "0x7fc56f73ba00->0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+          "children": []
+        },
+        {
+          "label": "t(150, 0, 150)",
+          "id": "0x7fc56f73ba00->0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+          "children": []
+        },
+        {
+          "label": "t(75, 130, 150)",
+          "id": "0x7fc56f73ba00->0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "mg(0, 150, 0, 150)",
+      "id": "0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+      "children": [
+        {
+          "label": "t(150, 0, 150)",
+          "id": "0x7fc56f73ba00->0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+          "children": []
+        },
+        {
+          "label": "t(75, 130, 150)",
+          "id": "0x7fc56f73ba00->0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "mg(0, 75, 130, 150)",
+      "id": "0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+      "children": [
+        {
+          "label": "t(75, 130, 150)",
+          "id": "0x7fc56f73ba00->0x7fc56f00efb0->0x7fc56f68a240->0x7fc56f459440",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

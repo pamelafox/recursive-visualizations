@@ -1,0 +1,23 @@
+{
+  "label": "find_zero(1, 20, <function <lambda> at 0x7fb20154bee0>)",
+  "id": "0x7fb20148a240->0x7fb1fff61440",
+  "children": [
+    {
+      "label": "find_zero(1, 9, <function <lambda> at 0x7fb20154bee0>)",
+      "id": "0x7fb201515e40->0x7fb20148a240->0x7fb1fff61440",
+      "children": [
+        {
+          "label": "find_zero(1, 4, <function <lambda> at 0x7fb20154bee0>)",
+          "id": "0x7fb201556200->0x7fb201515e40->0x7fb20148a240->0x7fb1fff61440",
+          "children": [
+            {
+              "label": "find_zero(3, 4, <function <lambda> at 0x7fb20154bee0>)",
+              "id": "0x7fb201556040->0x7fb201556200->0x7fb201515e40->0x7fb20148a240->0x7fb1fff61440",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
