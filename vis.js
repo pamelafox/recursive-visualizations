@@ -145,7 +145,7 @@ class RecursiveTreeViz {
     if (this.currentStep < this.steps.length - 1) {
       this.nextButton.removeAttribute("disabled");
     }
-    this.slider.setAttribute("value", this.currentStep);
+    this.slider.value = this.currentStep;
     this.toggleSteps();
   }
   
@@ -157,8 +157,7 @@ class RecursiveTreeViz {
     if (this.currentStep === this.steps.length - 1) {
       this.nextButton.setAttribute("disabled", "disabled");
     }
-    
-    this.slider.setAttribute("value", this.currentStep);
+    this.slider.value = this.currentStep;
     this.toggleSteps();
   }
   
