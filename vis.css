@@ -1,3 +1,7 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
 .node {
     background: white;
     border: 2px solid #ccc;
