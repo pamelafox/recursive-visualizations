@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <title>Recursion Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <style>
+    </style>
+  </head>
+  <body>
+    <div class="container">
+    <h1>Visualize a recursive function</h1>
+    <form method="get" action="/visualize">
+    <label>Paste the function definition here (starting with <code>def</code>):
+    <br>
+    <textarea rows="10" cols="120" name="function_definition"></textarea>
+    </label>
+    <br>
+    <label>Type your function call here:
+    <br>
+    <input type="text" placeholder="func(1, 2)" name="function_call"/>
+    </label>
+    <br>
+    <button type="submit">Visualize!</button>
+    </form>
+    </div>
+    <br>
+    <p>Credit: <a href="https://github.com/carlsborg">@carlsborg</a> for the <a href="https://github.com/carlsborg/rcviz">rcviz</a> library.</p>
+
+  </body>
+</html>
+

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <title>Recursion Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <style>
+    .edge text {
+       display: none;
+    }
+    .node, .edge, .node text {
+      visibility: hidden;
+    }
+    .node.activated text:first-of-type {
+      visibility: visible;
+    }
+    .node.activated path {
+      visibility: visible;
+    }
+    .node text.activated {
+      visibility: visible;
+    }
+    .edge.activated {
+      visibility: visible;
+    }
+    .svg-controls {
+      width: 600px;
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-template-columns: 100px 1fr 100px;
+      grid-gap: 8px;
+    }
+    .svg-controls button:first-of-type {
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .svg-controls input {
+      grid-row: 1;
+      grid-column: 2;
+    }
+    .svg-controls button:last-of-type {
+      grid-row: 1;
+      grid-column: 3;
+    }
+    </style>
+  </head>
+  <body>
+   {{ svg|safe }}
+
+    <script>
+    
+        class RecursiveTreeViz {
+          
+          constructor(svg, options) {
+            this.svg = svg;
+            options = options || {};
+            this.startStep = options.startStep;
+            this.steps = [];
+            this.frames = {};
+          }
+          
+          draw() {
+            // Store all the frames
+            var frames = this.svg.querySelectorAll(".node");
+            for (var i = 0; i < frames.length; i++) {
+              var frame = frames[i];
+              var frameId = frame.getElementsByTagName("title")[0].textContent;
+              this.frames[frameId] = frame;
+              var returnTag = frame.getElementsByTagName("text")[1];
+              var returnText = returnTag.textContent;
+              returnTag.textContent = returnText.split("(#")[0];
+              var stepNum = parseInt(returnText.split("(#")[1], 10);
+              this.steps[stepNum] = {returnValue: returnTag};
+            }
+        
+            // Determine number of steps
+            var edges = this.svg.querySelectorAll(".edge");
+            for (var i = 0; i < edges.length; i++) {
+              var edge = edges[i];
+              var edgeText = edge.getElementsByTagName("text")[0].textContent;
+              var edgeCounter = parseInt(edgeText, 10);
+              var edgeFrames = edge.getElementsByTagName("title")[0].textContent;
+              var parentFrame = edgeFrames.split("->")[0];
+              var childFrame = edgeFrames.split("->")[1];
+              this.steps[edgeCounter] = {
+                parentFrame: this.frames[parentFrame],
+                childFrame: this.frames[childFrame],
+                edge: edge
+              };
+            }
+              
+            if (this.startStep == null || isNaN(this.startStep)) {
+              this.currentStep = this.steps.length - 1;
+            } else {
+              this.currentStep = this.startStep;
+            }
+            this.drawControls();
+            this.toggleSteps();
+          }
+          
+          
+          drawControls() {
+            var controlsDiv = document.createElement("div");
+            controlsDiv.classList.add("svg-controls");
+            
+            this.prevButton = document.createElement("button");
+            this.prevButton.innerText = "< Prev";
+            if (this.currentStep <= 0) {
+              this.prevButton.setAttribute("disabled", "disabled");
+            }
+            this.prevButton.addEventListener("click", this.onPrevClick.bind(this));
+            
+            this.nextButton = document.createElement("button");
+            this.nextButton.innerText = "> Next";
+            if (this.currentStep >= this.steps.length - 1) {
+              this.nextButton.setAttribute("disabled", "disabled");
+            }
+            this.nextButton.addEventListener("click", this.onNextClick.bind(this));
+        
+            this.slider = document.createElement("input");
+            this.slider.setAttribute("type", "range");
+            this.slider.setAttribute("min", 0);
+            this.slider.setAttribute("max", this.steps.length - 1);
+            this.slider.setAttribute("value", this.currentStep);
+            this.slider.addEventListener("change", this.onSliderChange.bind(this));
+        
+            controlsDiv.appendChild(this.prevButton);
+            controlsDiv.appendChild(this.slider);
+            controlsDiv.appendChild(this.nextButton);
+        
+            this.svg.after(controlsDiv);
+          }
+        
+          toggleSteps() {
+            this.steps.forEach((step, stepI) => {
+              if (stepI == 1) {
+                 step.parentFrame && step.parentFrame.classList.add("activated");
+              }
+              if (stepI <= this.currentStep) {
+                 step.edge && step.edge.classList.add("activated");
+                 step.childFrame && step.childFrame.classList.add("activated");
+                 step.returnValue && step.returnValue.classList.add("activated");
+              } else {
+                 step.edge && step.edge.classList.remove("activated");
+                 step.childFrame && step.childFrame.classList.remove("activated");
+                 step.returnValue && step.returnValue.classList.remove("activated");
+              }
+            })
+          }
+          
+          onSliderChange(event) {
+            this.currentStep = parseInt(event.target.value, 10);
+            this.fixButtons();
+            this.toggleSteps();
+          }
+        
+          onPrevClick(event) {
+            this.currentStep--;
+            this.fixButtons();
+            this.slider.value = this.currentStep;
+            this.toggleSteps();
+          }
+
+          onNextClick(event) {
+            this.currentStep++;
+            this.fixButtons();
+            this.slider.value = this.currentStep;
+            this.toggleSteps();
+          }
+          
+          fixButtons() {
+            if (this.currentStep === 0) {
+              this.prevButton.setAttribute("disabled", "disabled");
+            }
+            if (this.currentStep < this.steps.length - 1) {
+              this.nextButton.removeAttribute("disabled");
+            }
+            if (this.currentStep > 0) {
+              this.prevButton.removeAttribute("disabled");
+            }
+            if (this.currentStep === this.steps.length - 1) {
+              this.nextButton.setAttribute("disabled", "disabled");
+            }
+          }
+        }
+        
+        new RecursiveTreeViz(document.getElementsByTagName("svg")[0]).draw()
+
+        </script>
+  </body>
+</html>
