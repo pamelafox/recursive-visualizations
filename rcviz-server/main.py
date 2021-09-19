@@ -12,7 +12,6 @@ def app_visualize():
   function_definition = "@viz\n" + request.args.get('function_definition')
   function_call = request.args.get('function_call')
   svg = visualize(function_definition, function_call)
-  svg = svg.decode("utf-8")
   return render_template('graph.html', svg=svg)
 
 if __name__ == '__main__':

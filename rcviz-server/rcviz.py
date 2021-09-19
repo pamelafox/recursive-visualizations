@@ -2,11 +2,17 @@
 # Copyright (c) Ran Dugal 2014
 # Licensed under the GPLv2, which is available at
 # http://www.gnu.org/licenses/gpl-2.0.html
-
+from time import time
 import inspect
 import pygraphviz as gviz
 import copy
 from typing import Dict, List, Any
+
+class TooManyFramesError(Exception):
+    pass
+
+class TooMuchTimeError(Exception):
+    pass
 
 class callgraph(object):
     '''singleton class that stores global graph data
@@ -132,6 +138,9 @@ class viz(object):
 
     def __init__(self, wrapped):
         self.wrapped = wrapped
+        self.max_frames = 1000 
+        self.max_time = 10 # in seconds
+        self.start_time = time()
 
     def __call__(self, *args, **kwargs):
 
@@ -143,10 +152,7 @@ class viz(object):
 
         fullstack = inspect.stack()
 
-
         if len(fullstack) > 2 and not fullstack[2].code_context[0].startswith("  eval("):
-            print(fullstack[2])
-            print(fullstack[3])
             caller_frame_id = id(fullstack[2][0])
 
         this_frame_id = id(fullstack[0][0])
@@ -164,9 +170,13 @@ class viz(object):
             g_callers[caller_frame_id].child_methods.append(edgeinfo)
             callgraph.increment()
 
-        # invoke wraped
+        if len(g_frames) > self.max_frames:
+          raise TooManyFramesError(f"Encountered more than ${self.max_frames} while executing function")
+        if (time() - self.start_time) > self.max_time:
+          raise TooMuchTimeError(f"Took more than ${self.max_time} seconds to run function")
+          
+        # Invoke the wrapped
         ret = self.wrapped(*args, **kwargs)
-
 
         g_callers[this_frame_id].ret_step = callgraph._step
 
@@ -180,7 +190,10 @@ class viz(object):
 
 
 def visualize(function_definition, function_call):
+  """Either returns generated SVG or generates an error."""
   callgraph.reset()
   exec(function_definition, globals())
   eval(function_call)
-  return callgraph.render()
+  return callgraph.render().decode('utf-8')
+
+    
