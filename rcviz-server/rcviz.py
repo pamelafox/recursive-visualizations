@@ -74,8 +74,8 @@ class callgraph(object):
             if not show_null_returns and node.ret is None:
                 label = "{ %s(%s) %s }" % (node.fn_name, node.argstr(), auxstr)
             else:
-                label = "{ %s(%s) %s | ret: %s (#%s)}" % (
-                    node.fn_name, node.argstr(), auxstr, node.ret, node.ret_step)
+                label = "{ %s(%s) %s}" % (
+                    node.fn_name, node.argstr(), auxstr)
             g.add_node(frame_id, shape='Mrecord', label=label,
                        fontsize=13, labelfontsize=13)
 
@@ -91,7 +91,7 @@ class callgraph(object):
                 cur_color = step * counter
                 color = "#%2x%2x%2x" % (
                     int(cur_color), int(cur_color), int(cur_color))
-                label = "%s" % (counter)
+                label = "(#%s)" % (counter)
                 g.add_edge(frame_id, child_id, label=label, color="black",
                            fontsize=8, labelfontsize=8, fontcolor="#999999")
 
@@ -104,6 +104,13 @@ class callgraph(object):
                     if prev_node:
                         sg.add_edge(prev_node, child_node, color="#ffffff")
                     prev_node = child_node
+
+        for frame_id, node in callgraph._callers.items():
+            for child_id, counter, unwind_counter in node.child_methods:
+              child_node = callgraph._callers.get(child_id)
+              if child_node and child_node.ret is not None:
+                ret_label = f'{child_node.ret} (#{child_node.ret_step})'
+                g.add_edge(frame_id, child_id, dir="back", label=ret_label, color="green", headport="c")
 
         g.layout()
         return g.draw(prog='dot', format='svg')

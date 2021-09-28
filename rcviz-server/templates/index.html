@@ -24,6 +24,7 @@ textarea,input[type=text] {
         <option value="none">Choose one...</option>
         <option value="virfib">virfib</option>
         <option value="count_partitions">count_partitions</option>
+        <option value="count_change">count_change</option>
       </select>
      </label>
     <label>Or paste the function definition here (starting with <code>def</code>):
@@ -63,6 +64,17 @@ def count_partitions(n, m):
         return with_m + without_m
 </pre>
     <code style="display:none" id="count_partitions-call">count_partitions(4, 2)</code>
+    <pre style="display:none" id="count_change-definition">
+def count_change(amount, coins):
+    if amount < 0 or len(coins) == 0:
+        return 0
+    if amount == 0:
+        return 1
+    without_largest = count_change(amount, coins[1:]) 
+    with_largest = count_change(amount - coins[0], coins)
+    return without_largest + with_largest
+</pre>
+    <code style="display:none" id="count_change-call">count_change(10, [10, 5, 1])</code>
     <br>
     <p>Credit: <a href="https://github.com/carlsborg">@carlsborg</a> for the <a href="https://github.com/carlsborg/rcviz">rcviz</a> library.</p>
 

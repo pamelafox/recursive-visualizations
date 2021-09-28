@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
     <style>
-    .edge text {
-       display: none;
-    }
     .node, .edge, .node text {
       visibility: hidden;
     }
@@ -32,6 +29,10 @@
       grid-template-rows: 1fr;
       grid-template-columns: 100px 1fr 100px;
       grid-gap: 8px;
+      position: fixed;
+      right: 0;
+      top: 0;
+      background: #80808070;
     }
     .svg-controls button:first-of-type {
       grid-row: 1;
@@ -50,6 +51,7 @@
   <body>
    {{ svg|safe }}
 
+
     <script>
     
         class RecursiveTreeViz {
@@ -64,31 +66,37 @@
           
           draw() {
             // Store all the frames
-            var frames = this.svg.querySelectorAll(".node");
+            const frames = this.svg.querySelectorAll(".node");
             for (var i = 0; i < frames.length; i++) {
-              var frame = frames[i];
-              var frameId = frame.getElementsByTagName("title")[0].textContent;
+              const frame = frames[i];
+              const frameId = frame.getElementsByTagName("title")[0].textContent;
               this.frames[frameId] = frame;
-              var returnTag = frame.getElementsByTagName("text")[1];
-              var returnText = returnTag.textContent;
-              returnTag.textContent = returnText.split("(#")[0];
-              var stepNum = parseInt(returnText.split("(#")[1], 10);
-              this.steps[stepNum] = {returnValue: returnTag};
             }
         
             // Determine number of steps
-            var edges = this.svg.querySelectorAll(".edge");
-            for (var i = 0; i < edges.length; i++) {
-              var edge = edges[i];
-              var edgeText = edge.getElementsByTagName("text")[0].textContent;
-              var edgeCounter = parseInt(edgeText, 10);
-              var edgeFrames = edge.getElementsByTagName("title")[0].textContent;
-              var parentFrame = edgeFrames.split("->")[0];
-              var childFrame = edgeFrames.split("->")[1];
-              this.steps[edgeCounter] = {
-                parentFrame: this.frames[parentFrame],
-                childFrame: this.frames[childFrame],
-                edge: edge
+            const edges = this.svg.querySelectorAll(".edge");
+            for (let i = 0; i < edges.length; i++) {
+              const edge = edges[i];
+              const edgeTitle = edge.getElementsByTagName("title")[0].textContent;
+              const edgeText = edge.getElementsByTagName("text")[0].textContent;
+
+              let stepNum, isReturn;
+              stepNum = parseInt(edgeText.split("(#")[1], 10); 
+              if (edgeTitle.endsWith(":c")) {
+                isReturn = true;
+                edge.getElementsByTagName("text")[0].textContent = edgeText.split("(#")[0];
+              } else {
+                edge.getElementsByTagName("text")[0].textContent = "";
+                isReturn = false;
+              }
+              const edgeFrames = edgeTitle.split(":c")[0];
+              const parentFrameId = edgeFrames.split("->")[0];
+              const childFrameId = edgeFrames.split("->")[1];
+              this.steps[stepNum] = {
+                parentFrame: this.frames[parentFrameId],
+                childFrame: this.frames[childFrameId],
+                edge: edge,
+                isReturn: isReturn
               };
             }
               
@@ -135,18 +143,17 @@
           }
         
           toggleSteps() {
+            console.log(this.steps);
             this.steps.forEach((step, stepI) => {
               if (stepI == 1) {
                  step.parentFrame && step.parentFrame.classList.add("activated");
               }
               if (stepI <= this.currentStep) {
-                 step.edge && step.edge.classList.add("activated");
-                 step.childFrame && step.childFrame.classList.add("activated");
-                 step.returnValue && step.returnValue.classList.add("activated");
+                 step.edge.classList.add("activated");
+                 step.childFrame.classList.add("activated");
               } else {
-                 step.edge && step.edge.classList.remove("activated");
-                 step.childFrame && step.childFrame.classList.remove("activated");
-                 step.returnValue && step.returnValue.classList.remove("activated");
+                 step.edge.classList.remove("activated");
+                 !step.isReturn && step.childFrame.classList.remove("activated");
               }
             })
           }
