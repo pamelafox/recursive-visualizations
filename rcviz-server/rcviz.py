@@ -8,6 +8,9 @@ import pygraphviz as gviz
 import copy
 from typing import Dict, List, Any
 
+# TODO: Optionally import if this is used outside CS61A
+from tree_and_link import *
+
 class TooManyFramesError(Exception):
     pass
 
@@ -66,7 +69,6 @@ class callgraph(object):
 
         # create nodes
         for frame_id, node in callgraph._callers.items():
-
             auxstr = ""
             for param, val in node.auxdata.items():
                 auxstr += " | %s: %s" % (param, val)
@@ -105,12 +107,21 @@ class callgraph(object):
                         sg.add_edge(prev_node, child_node, color="#ffffff")
                     prev_node = child_node
 
+        parent_frame = None
         for frame_id, node in callgraph._callers.items():
             for child_id, counter, unwind_counter in node.child_methods:
               child_node = callgraph._callers.get(child_id)
               if child_node and child_node.ret is not None:
                 ret_label = f'{child_node.ret} (#{child_node.ret_step})'
                 g.add_edge(frame_id, child_id, dir="back", label=ret_label, color="green", headport="c")
+            if parent_frame is None:
+              parent_frame = frame_id
+              if node.ret is not None:
+                ret_label = f'{node.ret} (#{node.ret_step})'
+                g.add_node(99999999, shape='Mrecord', label='Result',
+                       fontsize=13, labelfontsize=13)
+                g.add_edge(99999999, frame_id, dir="back", label=ret_label, color="green", headport="c")
+         
 
         g.layout()
         return g.draw(prog='dot', format='svg')
@@ -134,8 +145,8 @@ class node_data(object):
         return "%s = %s(%s)" % (self.ret, self.fn_name, self.argstr())
 
     def argstr(self):
-        s_args = ",".join([str(arg) for arg in self.args])
-        s_kwargs = ",".join([(str(k), str(v))
+        s_args = ", ".join([str(arg) for arg in self.args])
+        s_kwargs = ", ".join([(str(k), str(v))
                              for (k, v) in self.kwargs.items()])
         return "%s%s" % (s_args, s_kwargs)
 
@@ -159,8 +170,10 @@ class viz(object):
 
         fullstack = inspect.stack()
 
-        if len(fullstack) > 2 and not fullstack[2].code_context[0].startswith("  eval("):
-            caller_frame_id = id(fullstack[2][0])
+        for i in range(len(fullstack)):
+          if fullstack[i].code_context and 'ret = self.wrapped(' in fullstack[i].code_context[0]:
+            caller_frame_id = id(fullstack[i][0])
+            break
 
         this_frame_id = id(fullstack[0][0])
 
