@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <title>Recursion Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../shared/recursive_tree_viz.css">
+    <style>
+textarea,input[type=text] {
+  font-family: monospace;
+  font-weight: normal;
+}
+    </style>
+    <style>
+
+      </style>
+  </head>
+  <body>
+    <div class="container">
+
+    <h1>Visualize a recursive function</h1>
+    <label>Try one of these functions:
+      <select id="function-select">
+        <option value="none">Choose one...</option>
+        <option value="virfib">virfib</option>
+        <option value="count_partitions">count_partitions</option>
+      </select>
+     </label>
+    <label>Or paste the function definition here (starting with <code>def</code>):
+    <br>
+    <textarea id="function-definition-textarea" rows="10" cols="120" name="function_definition"></textarea>
+    </label>
+    <br>
+    <label>Type your function call here:
+    <br>
+    <input id="function-call-input" type="text" placeholder="func(1, 2)" name="function_call" size="120"/>
+    </label>
+    <br>
+    <br>
+    <button id="visualize-button" type="button" class="btn btn-primary" disabled>Visualize!</button>
+    <span id="visualize-status">Loading libraries...</span>
+    <pre style="display:none" id="virfib-definition">
+def virfib(n):
+  if n == 0:
+    return 0
+  if n == 1:
+    return 1
+  else:
+    return virfib(n - 1) + virfib(n - 2)
+    </pre>
+    <code style="display:none" id="virfib-call">virfib(3)</code>
+    <pre style="display:none" id="count_partitions-definition">
+def count_partitions(n, m):
+    if n == 0:
+        return 1
+    elif n < 0:
+        return 0
+    elif m == 0:
+        return 0
+    else:
+        with_m = count_partitions(n-m, m)
+        without_m = count_partitions(n, m-1)
+        return with_m + without_m
+</pre>
+    <code style="display:none" id="count_partitions-call">count_partitions(4, 2)</code>
+    <br>
+
+    <div id="placeholder" style="margin-top: 80px;"></div>
+
+
+    <div style="margin-top:80px;">
+    <p>Credit: <a href="https://github.com/carlsborg">@carlsborg</a> for the <a href="https://github.com/carlsborg/rcviz">rcviz</a> library.</p>
+    </div>
+
+    </div>
+    <!-- JS for adding interactive controls-->
+    <script src="../shared/recursive_tree_viz.js"></script>
+    <!-- GraphViz WASM -->
+    <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm/dist/index.min.js"></script>
+    <!-- Python WASM -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.19.0/full/pyodide.js"></script>
+    <!-- Form functionality-->
+    <script>
+    function prefillFunction(event) {
+      const functionName = event.target.value;
+      const functionPre = document.getElementById(functionName + "-definition");
+      if (!functionPre) return;
+      document.getElementById('function-definition-textarea').value = functionPre.textContent;
+      const functionCall = document.getElementById(functionName + "-call");
+      if (!functionCall) return;
+      document.getElementById('function-call-input').value = functionCall.textContent;
+    }
+
+    document.getElementById("function-select").addEventListener("change", prefillFunction);
+    </script>
+    <!-- Python callgraph computation + Graphviz rendering-->
+    <script>
+    var hpccWasm = window["@hpcc-js/wasm"];
+
+    async function main() {
+      let pyodide = await loadPyodide({
+        indexURL : "https://cdn.jsdelivr.net/pyodide/v0.19.0/full/"
+      });
+      await pyodide.loadPackage("micropip");
+      await pyodide.runPythonAsync(`
+      import micropip
+      micropip.install('pydot-1.4.1-py2.py3-none-any.whl')
+      `);
+      pyodide.runPython(await (await fetch("rcviz.py")).text());
+      document.getElementById("visualize-status").innerHTML = "";
+      document.getElementById("visualize-button").removeAttribute("disabled");
+      document.getElementById("visualize-button").addEventListener("click", function() {
+        document.getElementById("visualize-status").innerHTML = "Computing call graph...";
+        const functionDef = "@viz\n" + document.getElementById('function-definition-textarea').value;
+        const functionCall = document.getElementById('function-call-input').value;
+        const dotGraph = pyodide.runPython(`visualize("""${functionDef}""", '${functionCall}')`);
+        document.getElementById("visualize-status").innerHTML = "Rendering call graph...";
+        hpccWasm.graphvizSync().then(graphviz => {
+              const div = document.getElementById("placeholder");
+              div.innerHTML = graphviz.layout(dotGraph, "svg", "dot");
+              new RecursiveTreeViz(div.querySelector('svg')).draw()
+              document.getElementById("visualize-status").innerHTML = "";
+
+        });
+      });
+    };
+
+    main();
+   </script>
+  </body>
+</html>
