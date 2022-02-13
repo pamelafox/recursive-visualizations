@@ -1,0 +1,35 @@
+.graph .node, .graph .edge, .graph .node text {
+    visibility: hidden;
+}
+.graph .node.activated text:first-of-type {
+    visibility: visible;
+}
+.graph .node.activated path {
+    visibility: visible;
+}
+.graph .node text.activated {
+    visibility: visible;
+}
+.graph .edge.activated {
+    visibility: visible;
+}
+.svg-controls {
+    width: 600px;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 100px 1fr 100px;
+    grid-gap: 8px;
+    background: #80808070;
+}
+.svg-controls button:first-of-type {
+    grid-row: 1;
+    grid-column: 1;
+}
+.svg-controls input {
+    grid-row: 1;
+    grid-column: 2;
+}
+.svg-controls button:last-of-type {
+    grid-row: 1;
+    grid-column: 3;
+}
