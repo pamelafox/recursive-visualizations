@@ -7,7 +7,7 @@
     <title>Recursion Visualizer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
-    <link rel="stylesheet" href="../shared/recursive_tree_viz.css">
+    <link rel="stylesheet" href="shared/recursive_tree_viz.css">
     <style>
 textarea,input[type=text] {
   font-family: monospace;
@@ -70,14 +70,17 @@ def count_partitions(n, m):
 
     <div id="placeholder" style="margin-top: 80px;"></div>
 
-
+    <div id="permalink-area" style="margin-top:12px; display:none;">
+    <label for="permalink-input">Permalink:</label> <input type="url" id="permalink-input" style="width: 600px;">
+    </div>
+ 
     <div style="margin-top:80px;">
-    <p>Credit: <a href="https://github.com/carlsborg">@carlsborg</a> for the <a href="https://github.com/carlsborg/rcviz">rcviz</a> library.</p>
+    <p>Source code on <a href="https://github.com/pamelafox/recursive-visualizations" target="_blank">Github</a>. Thank you <a href="https://github.com/carlsborg">@carlsborg</a> for the <a href="https://github.com/carlsborg/rcviz">rcviz</a> library.</p>
     </div>
 
     </div>
     <!-- JS for adding interactive controls-->
-    <script src="../shared/recursive_tree_viz.js"></script>
+    <script src="shared/recursive_tree_viz.js"></script>
     <!-- GraphViz WASM -->
     <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm/dist/index.min.js"></script>
     <!-- Python WASM -->
@@ -95,13 +98,38 @@ def count_partitions(n, m):
     }
 
     document.getElementById("function-select").addEventListener("change", prefillFunction);
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const funcDef = urlParams.get('function_definition');
+    const funcCall = urlParams.get('function_call');
+    if (funcDef) document.getElementById('function-definition-textarea').value = funcDef;
+    if (funcCall) document.getElementById('function-call-input').value = funcCall;
+    const readyToViz = funcDef && funcCall;
     </script>
     <!-- Python callgraph computation + Graphviz rendering-->
     <script>
     var hpccWasm = window["@hpcc-js/wasm"];
+    var pyodide;
+    
+    function computeVisualization() {
+        document.getElementById("visualize-status").innerHTML = "Computing call graph...";
+        const functionDef = document.getElementById('function-definition-textarea').value;
+        const functionCall = document.getElementById('function-call-input').value;
+        const dotGraph = pyodide.runPython(`visualize("""@viz\n${functionDef}""", '${functionCall}')`);
+        document.getElementById("visualize-status").innerHTML = "Rendering call graph...";
+        hpccWasm.graphvizSync().then(graphviz => {
+              const div = document.getElementById("placeholder");
+              div.innerHTML = graphviz.layout(dotGraph, "svg", "dot");
+              new RecursiveTreeViz(div.querySelector('svg')).draw()
+              document.getElementById("visualize-status").innerHTML = "";
+              const permalink = `${window.location.origin}/?function_definition=${encodeURIComponent(functionDef)}&function_call=${encodeURIComponent(functionCall)}`;
+              document.getElementById("permalink-area").style.display = "block";
+              document.getElementById("permalink-input").value = permalink;
+        });
+    }
 
     async function main() {
-      let pyodide = await loadPyodide({
+      pyodide = await loadPyodide({
         indexURL : "https://cdn.jsdelivr.net/pyodide/v0.19.0/full/"
       });
       await pyodide.loadPackage("micropip");
@@ -112,20 +140,8 @@ def count_partitions(n, m):
       pyodide.runPython(await (await fetch("rcviz.py")).text());
       document.getElementById("visualize-status").innerHTML = "";
       document.getElementById("visualize-button").removeAttribute("disabled");
-      document.getElementById("visualize-button").addEventListener("click", function() {
-        document.getElementById("visualize-status").innerHTML = "Computing call graph...";
-        const functionDef = "@viz\n" + document.getElementById('function-definition-textarea').value;
-        const functionCall = document.getElementById('function-call-input').value;
-        const dotGraph = pyodide.runPython(`visualize("""${functionDef}""", '${functionCall}')`);
-        document.getElementById("visualize-status").innerHTML = "Rendering call graph...";
-        hpccWasm.graphvizSync().then(graphviz => {
-              const div = document.getElementById("placeholder");
-              div.innerHTML = graphviz.layout(dotGraph, "svg", "dot");
-              new RecursiveTreeViz(div.querySelector('svg')).draw()
-              document.getElementById("visualize-status").innerHTML = "";
-
-        });
-      });
+      document.getElementById("visualize-button").addEventListener("click", computeVisualization);
+      readyToViz && computeVisualization();
     };
 
     main();

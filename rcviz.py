@@ -193,19 +193,3 @@ def visualize(function_definition, function_call):
   exec(function_definition, globals())
   eval(function_call)
   return callgraph.render()
-
-@viz
-def fact(n):
-    if n == 0:
-        return 1
-    else:
-        return n * fact(n-1)
-    
-if __name__ == '__main__':
-  print(visualize("""@viz
-def fact(n):
-    if n == 0:
-        return 1
-    else:
-        return n * fact(n-1)""", "fact(3)"))
-
