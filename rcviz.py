@@ -187,9 +187,19 @@ class viz(object):
         return ret
 
 
+def decorate_funcs(func_source: str):
+    outlines = []
+    for line in func_source.split("\n"):
+        if line.startswith("def "):
+            outlines.append("@viz")
+        outlines.append(line)
+    return "\n".join(outlines)
+
+
 def visualize(function_definition, function_call):
   """Either returns generated SVG or generates an error."""
   callgraph.reset()
+  function_definition=decorate_funcs(function_definition)
   exec(function_definition, globals())
   eval(function_call)
   return callgraph.render()
