@@ -115,7 +115,7 @@ def count_partitions(n, m):
         document.getElementById("visualize-status").innerHTML = "Computing call graph...";
         const functionDef = document.getElementById('function-definition-textarea').value;
         const functionCall = document.getElementById('function-call-input').value;
-        const dotGraph = pyodide.runPython(`visualize("""@viz\n${functionDef}""", '${functionCall}')`);
+        const dotGraph = pyodide.runPython(`visualize('''${functionDef}''', '''${functionCall}''')`);
         document.getElementById("visualize-status").innerHTML = "Rendering call graph...";
         hpccWasm.graphvizSync().then(graphviz => {
               const div = document.getElementById("placeholder");
