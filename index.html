@@ -27,6 +27,7 @@ textarea,input[type=text] {
         <option value="none">Choose one...</option>
         <option value="virfib">virfib</option>
         <option value="count_partitions">count_partitions</option>
+        <option value="luhn_sum">luhn_sum</option>
       </select>
      </label>
     <label>Or paste the function definition here (starting with <code>def</code>):
@@ -66,6 +67,33 @@ def count_partitions(n, m):
         return with_m + without_m
 </pre>
     <code style="display:none" id="count_partitions-call">count_partitions(4, 2)</code>
+    <pre style="display:none" id="luhn_sum-definition">
+def sum_digits(n):
+    if n < 10:
+        return n
+    else:
+        last = n % 10
+        all_but_last = n // 10
+        return last + sum_digits(all_but_last)
+
+def luhn_sum(n):
+    if n < 10:
+        return n
+    else:
+        last = n % 10
+        all_but_last = n // 10
+        return last + luhn_sum_double(all_but_last)
+        
+def luhn_sum_double(n):
+    last = n % 10
+    all_but_last = n // 10
+    luhn_digit = sum_digits(last * 2)
+    if n < 10:
+        return luhn_digit
+    else:
+        return luhn_digit + luhn_sum(all_but_last)
+    </pre>
+    <code style="display:none" id="luhn_sum-call">luhn_sum(5106)</code>
     <br>
 
     <div id="placeholder" style="margin-top: 80px;"></div>
