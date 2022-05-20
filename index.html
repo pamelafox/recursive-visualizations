@@ -150,7 +150,7 @@ def luhn_sum_double(n):
               div.innerHTML = graphviz.layout(dotGraph, "svg", "dot");
               new RecursiveTreeViz(div.querySelector('svg')).draw()
               document.getElementById("visualize-status").innerHTML = "";
-              const permalink = `${window.location.origin}/?function_definition=${encodeURIComponent(functionDef)}&function_call=${encodeURIComponent(functionCall)}`;
+              const permalink = `${window.location.origin}/?function_definition=${encodeURIComponent(functionDef)}&function_call=${encodeURIComponent(functionCall)}`.replace(/\(/g, '%28').replace(/\)/g, '%29');
               document.getElementById("permalink-area").style.display = "block";
               document.getElementById("permalink-input").value = permalink;
         });
