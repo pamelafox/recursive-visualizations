@@ -158,7 +158,7 @@ class node_data(object):
 
 
 class viz(object):
-    """ decorator to construct the call graph with args and return values as labels """
+    """decorator to construct the call graph with args and return values as labels"""
 
     def __init__(self, wrapped):
         self.wrapped = wrapped
