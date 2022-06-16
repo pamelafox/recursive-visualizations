@@ -163,9 +163,9 @@ def luhn_sum_double(n):
       await pyodide.loadPackage("micropip");
       await pyodide.runPythonAsync(`
       import micropip
-      micropip.install('pydot-1.4.1-py2.py3-none-any.whl')
+      micropip.install('python/pydot-1.4.1-py2.py3-none-any.whl')
       `);
-      pyodide.runPython(await (await fetch("rcviz.py")).text());
+      pyodide.runPython(await (await fetch("python/rcviz.py")).text());
       document.getElementById("visualize-status").innerHTML = "";
       document.getElementById("visualize-button").removeAttribute("disabled");
       document.getElementById("visualize-button").addEventListener("click", computeVisualization);
