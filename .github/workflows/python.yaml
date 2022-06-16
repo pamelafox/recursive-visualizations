@@ -26,7 +26,7 @@ jobs:
         uses: psf/black@stable
         with:
           src: "python/"
-          options: "--check --verbose --line-length=100"
+          options: "--check --verbose"
       - name: Run unit tests
         run: |
           python python/rcviz_test.py
