@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Run yarn
-        run: yarn
+      - name: Install ESLint
+        run: npm install eslint
       - name: Run ESLint
         run: eslint javascript/
