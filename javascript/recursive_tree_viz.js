@@ -1,4 +1,4 @@
-class RecursiveTreeViz {
+export class RecursiveTreeViz {
 
     constructor(svg, options) {
         this.svg = svg;
@@ -114,14 +114,14 @@ class RecursiveTreeViz {
         this.toggleSteps();
     }
 
-    onPrevClick(event) {
+    onPrevClick() {
         this.currentStep--;
         this.fixButtons();
         this.slider.value = this.currentStep;
         this.toggleSteps();
     }
 
-    onNextClick(event) {
+    onNextClick() {
         this.currentStep++;
         this.fixButtons();
         this.slider.value = this.currentStep;

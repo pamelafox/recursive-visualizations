@@ -7,7 +7,7 @@
     <title>Recursion Visualizer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
-    <link rel="stylesheet" href="shared/recursive_tree_viz.css">
+    <link rel="stylesheet" href="css/recursive_tree_viz.css">
     <style>
 textarea,input[type=text] {
   font-family: monospace;
@@ -83,7 +83,7 @@ def luhn_sum(n):
         last = n % 10
         all_but_last = n // 10
         return last + luhn_sum_double(all_but_last)
-        
+
 def luhn_sum_double(n):
     last = n % 10
     all_but_last = n // 10
@@ -101,14 +101,12 @@ def luhn_sum_double(n):
     <div id="permalink-area" style="margin-top:12px; display:none;">
     <label for="permalink-input">Permalink:</label> <input type="url" id="permalink-input" style="width: 600px;">
     </div>
- 
+
     <div style="margin-top:80px;">
     <p>Source code on <a href="https://github.com/pamelafox/recursive-visualizations" target="_blank">Github</a>. Thank you <a href="https://github.com/carlsborg">@carlsborg</a> for the <a href="https://github.com/carlsborg/rcviz">rcviz</a> library.</p>
     </div>
 
     </div>
-    <!-- JS for adding interactive controls-->
-    <script src="shared/recursive_tree_viz.js"></script>
     <!-- GraphViz WASM -->
     <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm/dist/index.min.js"></script>
     <!-- Python WASM -->
@@ -126,7 +124,7 @@ def luhn_sum_double(n):
     }
 
     document.getElementById("function-select").addEventListener("change", prefillFunction);
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     const funcDef = urlParams.get('function_definition');
     const funcCall = urlParams.get('function_call');
@@ -135,10 +133,12 @@ def luhn_sum_double(n):
     const readyToViz = funcDef && funcCall;
     </script>
     <!-- Python callgraph computation + Graphviz rendering-->
-    <script>
+    <script type="module">
+    import {RecursiveTreeViz} from './javascript/recursive_tree_viz.js';
+
     var hpccWasm = window["@hpcc-js/wasm"];
     var pyodide;
-    
+
     function computeVisualization() {
         document.getElementById("visualize-status").innerHTML = "Computing call graph...";
         const functionDef = document.getElementById('function-definition-textarea').value;
