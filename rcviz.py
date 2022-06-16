@@ -185,7 +185,11 @@ class viz(object):
 
         if this_frame_id not in g_callers.keys():
             g_callers[this_frame_id] = node_data(
-                copy.deepcopy(args), copy.deepcopy(kwargs), self.wrapped.__name__, None, []
+                copy.deepcopy(args),
+                copy.deepcopy(kwargs),
+                self.wrapped.__name__,
+                None,
+                [],
             )
 
         edgeinfo = None
