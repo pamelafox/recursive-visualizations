@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run ESLint
-        run: eslint javascript/
+        run: yarn run eslint javascript/
