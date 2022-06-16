@@ -24,6 +24,8 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Check formatting with black
         uses: psf/black@stable
+        with:
+          line-length: 100
       - name: Run unit tests
         run: |
           python rcviz_test.py
