@@ -81,9 +81,7 @@ class callgraph(object):
             for child_id, counter, unwind_counter in node.child_methods:
                 child_nodes.append(child_id)
                 label = "(#%s)" % (counter)
-                dotgraph.add_edge(
-                    pydot.Edge(frame_id, child_id, color="black", label=label)
-                )
+                dotgraph.add_edge(pydot.Edge(frame_id, child_id, color="black", label=label))
 
             # Order edges left to right
             if len(child_nodes) > 1:
@@ -116,9 +114,7 @@ class callgraph(object):
                 parent_frame = frame_id
                 if node.ret is not None:
                     ret_label = f"{node.ret} (#{node.ret_step})"
-                    dotgraph.add_node(
-                        pydot.Node(99999999, shape="Mrecord", label="Result")
-                    )
+                    dotgraph.add_node(pydot.Node(99999999, shape="Mrecord", label="Result"))
                     dotgraph.add_edge(
                         pydot.Edge(
                             99999999,
@@ -134,9 +130,7 @@ class callgraph(object):
 
 
 class node_data(object):
-    def __init__(
-        self, _args=None, _kwargs=None, _fnname="", _ret=None, _childmethods=[]
-    ):
+    def __init__(self, _args=None, _kwargs=None, _fnname="", _ret=None, _childmethods=[]):
         self.args = _args
         self.kwargs = _kwargs
         self.fn_name = _fnname
@@ -203,9 +197,7 @@ class viz(object):
                 f"Encountered more than ${self.max_frames} while executing function"
             )
         if (time() - self.start_time) > self.max_time:
-            raise TooMuchTimeError(
-                f"Took more than ${self.max_time} seconds to run function"
-            )
+            raise TooMuchTimeError(f"Took more than ${self.max_time} seconds to run function")
 
         # Invoke the wrapped
         ret = self.wrapped(*args, **kwargs)
