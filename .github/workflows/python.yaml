@@ -25,7 +25,7 @@ jobs:
       - name: Check formatting with black
         uses: psf/black@stable
         with:
-          options: "--line-length=100"
+          options: "--check --verbose --line-length=100"
       - name: Run unit tests
         run: |
           python rcviz_test.py
