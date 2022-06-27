@@ -68,7 +68,7 @@ class callgraph(object):
 
         # Create nodes
         for frame_id, node in callgraph.get_callers().items():
-            label = f"{node.fn_name}({node.argstr()})"
+            label = f"{{ {node.fn_name}({node.argstr()}) }}"
             dotgraph.add_node(pydot.Node(frame_id, label=label, shape="Mrecord"))
 
         # Create edges
@@ -172,7 +172,7 @@ class viz(object):
 
         edgeinfo = None
         if caller_frame_id:
-            edgeinfo = [this_frame_id, callgraph.get_counter()]
+            edgeinfo = [this_frame_id, callgraph._step]
             g_callers[caller_frame_id].child_methods.append(edgeinfo)
             callgraph.increment()
 
