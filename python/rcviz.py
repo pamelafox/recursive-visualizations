@@ -12,7 +12,6 @@ import pydot
 MAX_FRAMES = 1000
 MAX_TIME = 10
 
-
 class TooManyFramesError(Exception):
     pass
 
@@ -43,10 +42,6 @@ class callgraph(object):
     @staticmethod
     def get_callers():
         return callgraph._callers
-
-    @staticmethod
-    def get_counter():
-        return callgraph._counter
 
     @staticmethod
     def increment():
@@ -126,12 +121,12 @@ class callgraph(object):
 
 
 class node_data(object):
-    def __init__(self, _args=None, _kwargs=None, _fnname="", _ret=None, _child_methods=[]):
+    def __init__(self, _args=None, _kwargs=None, _fn_name=""):
         self.args = _args
         self.kwargs = _kwargs
-        self.fn_name = _fnname
-        self.ret = _ret
-        self.child_methods = _child_methods
+        self.fn_name = _fn_name
+        self.ret = None
+        self.child_methods = []
 
     def argstr(self):
         s_args = ", ".join([str(arg) for arg in self.args])
@@ -167,7 +162,9 @@ class viz(object):
 
         if this_frame_id not in g_callers.keys():
             g_callers[this_frame_id] = node_data(
-                copy.deepcopy(args), copy.deepcopy(kwargs), self.wrapped.__name__
+                copy.deepcopy(args),
+                copy.deepcopy(kwargs),
+                self.wrapped.__name__
             )
 
         edgeinfo = None
