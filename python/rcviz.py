@@ -12,6 +12,7 @@ import pydot
 MAX_FRAMES = 1000
 MAX_TIME = 10
 
+
 class TooManyFramesError(Exception):
     pass
 
@@ -162,9 +163,7 @@ class viz(object):
 
         if this_frame_id not in g_callers.keys():
             g_callers[this_frame_id] = node_data(
-                copy.deepcopy(args),
-                copy.deepcopy(kwargs),
-                self.wrapped.__name__
+                copy.deepcopy(args), copy.deepcopy(kwargs), self.wrapped.__name__
             )
 
         edgeinfo = None
