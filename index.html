@@ -144,6 +144,7 @@ def luhn_sum_double(n):
         const functionDef = document.getElementById('function-definition-textarea').value;
         const functionCall = document.getElementById('function-call-input').value;
         const dotGraph = pyodide.runPython(`visualize('''${functionDef}''', '''${functionCall}''')`);
+        console.log(dotGraph);
         document.getElementById("visualize-status").innerHTML = "Rendering call graph...";
         hpccWasm.graphvizSync().then(graphviz => {
               const div = document.getElementById("placeholder");

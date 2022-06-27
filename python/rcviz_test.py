@@ -15,6 +15,7 @@ def fib(n):
 
 def test_visualize():
     dotgraph = rcviz.visualize(fib_def, "fib(2)")
+    print(dotgraph)
     assert "fib(1)" in dotgraph
 
 
