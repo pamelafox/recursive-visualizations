@@ -1,0 +1,6 @@
+pydot
+pytest==7.1.2
+black==22.3.0
+flake8==4.0.1
+coverage==6.4.1
+pytest-cov==3.0.0

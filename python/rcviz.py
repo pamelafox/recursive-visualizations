@@ -9,6 +9,9 @@ from typing import Dict, List, Any
 
 import pydot
 
+MAX_FRAMES = 1000
+MAX_TIME = 10
+
 
 class TooManyFramesError(Exception):
     pass
@@ -42,14 +45,6 @@ class callgraph(object):
         return callgraph._callers
 
     @staticmethod
-    def get_counter():
-        return callgraph._counter
-
-    @staticmethod
-    def get_unwindcounter():
-        return callgraph._unwindcounter
-
-    @staticmethod
     def increment():
         callgraph._counter += 1
         callgraph._step += 1
@@ -68,19 +63,16 @@ class callgraph(object):
         dotgraph = pydot.Dot("rc-graph", graph_type="digraph", strict=False)
 
         # Create nodes
-        for frame_id, node in callgraph._callers.items():
-            aux_str = ""
-            for param, val in node.auxdata.items():
-                aux_str += " | %s: %s" % (param, val)
-            label = "{ %s(%s) %s}" % (node.fn_name, node.argstr(), aux_str)
+        for frame_id, node in callgraph.get_callers().items():
+            label = f"{{ {node.fn_name}({node.argstr()}) }}"
             dotgraph.add_node(pydot.Node(frame_id, label=label, shape="Mrecord"))
 
         # Create edges
-        for frame_id, node in callgraph._callers.items():
+        for frame_id, node in callgraph.get_callers().items():
             child_nodes = []
-            for child_id, counter, unwind_counter in node.child_methods:
+            for child_id, counter in node.child_methods:
                 child_nodes.append(child_id)
-                label = "(#%s)" % (counter)
+                label = f"(#{counter})"
                 dotgraph.add_edge(pydot.Edge(frame_id, child_id, color="black", label=label))
 
             # Order edges left to right
@@ -95,9 +87,9 @@ class callgraph(object):
                 dotgraph.add_subgraph(subgraph)
 
         parent_frame = None
-        for frame_id, node in callgraph._callers.items():
-            for child_id, counter, unwind_counter in node.child_methods:
-                child_node = callgraph._callers.get(child_id)
+        for frame_id, node in callgraph.get_callers().items():
+            for child_id, counter in node.child_methods:
+                child_node = callgraph.get_callers().get(child_id)
                 if child_node and child_node.ret is not None:
                     ret_label = f"{child_node.ret} (#{child_node.ret_step})"
                     dotgraph.add_edge(
@@ -130,25 +122,17 @@ class callgraph(object):
 
 
 class node_data(object):
-    def __init__(self, _args=None, _kwargs=None, _fnname="", _ret=None, _childmethods=[]):
+    def __init__(self, _args=None, _kwargs=None, _fn_name=""):
         self.args = _args
         self.kwargs = _kwargs
-        self.fn_name = _fnname
-        self.ret = _ret
-        self.child_methods = _childmethods  # [ (method, gcounter) ]
-
-        self.auxdata = {}  # user assigned track data
-
-    def __str__(self):
-        return "%s -> child_methods: %s" % (self.nodestr(), self.child_methods)
-
-    def nodestr(self):
-        return "%s = %s(%s)" % (self.ret, self.fn_name, self.argstr())
+        self.fn_name = _fn_name
+        self.ret = None
+        self.child_methods = []
 
     def argstr(self):
         s_args = ", ".join([str(arg) for arg in self.args])
         s_kwargs = ", ".join([(str(k), str(v)) for (k, v) in self.kwargs.items()])
-        return "%s%s" % (s_args, s_kwargs)
+        return f"{s_args}{s_kwargs}"
 
 
 class viz(object):
@@ -156,8 +140,8 @@ class viz(object):
 
     def __init__(self, wrapped):
         self.wrapped = wrapped
-        self.max_frames = 1000
-        self.max_time = 10  # in seconds
+        self.max_frames = MAX_FRAMES
+        self.max_time = MAX_TIME  # in seconds
         self.start_time = time()
 
     def __call__(self, *args, **kwargs):
@@ -179,11 +163,7 @@ class viz(object):
 
         if this_frame_id not in g_callers.keys():
             g_callers[this_frame_id] = node_data(
-                copy.deepcopy(args),
-                copy.deepcopy(kwargs),
-                self.wrapped.__name__,
-                None,
-                [],
+                copy.deepcopy(args), copy.deepcopy(kwargs), self.wrapped.__name__
             )
 
         edgeinfo = None
@@ -205,7 +185,6 @@ class viz(object):
         g_callers[this_frame_id].ret_step = callgraph._step
 
         if edgeinfo:
-            edgeinfo.append(callgraph.get_unwindcounter())
             callgraph.increment_unwind()
 
         g_callers[this_frame_id].ret = copy.deepcopy(ret)

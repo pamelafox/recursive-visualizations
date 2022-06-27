@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest pydot
+          pip install -r requirements-dev.txt 
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
@@ -29,4 +29,4 @@ jobs:
           options: "--check --verbose"
       - name: Run unit tests
         run: |
-          python python/rcviz_test.py
+          pytest

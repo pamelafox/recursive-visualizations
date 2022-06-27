@@ -1,3 +1,17 @@
 [tool.black]
 line-length = 100
 target-version = ['py39']
+
+[tool.pytest.ini_options]
+addopts = "-ra --cov"
+testpaths = [
+    "python"
+]
+pythonpath = ['python']
+
+[tool.coverage.paths]
+source = ["python"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 100
