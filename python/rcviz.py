@@ -64,7 +64,7 @@ class callgraph(object):
 
         # Create nodes
         for frame_id, node in callgraph.get_callers().items():
-            label = f"{{ {node.fn_name}({node.argstr()}) }}"
+            label = f"{node.fn_name}({node.argstr()})"
             dotgraph.add_node(pydot.Node(frame_id, label=label, shape="Mrecord"))
 
         # Create edges
@@ -132,7 +132,7 @@ class node_data(object):
     def argstr(self):
         s_args = ", ".join([str(arg) for arg in self.args])
         s_kwargs = ", ".join([(str(k), str(v)) for (k, v) in self.kwargs.items()])
-        return f"{s_args}{s_kwargs}"
+        return f"{s_args}{s_kwargs}".replace("{", "\{").replace("}", "\}")
 
 
 class viz(object):
