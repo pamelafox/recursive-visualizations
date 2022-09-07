@@ -21,11 +21,11 @@ def test_visualize():
     assert len(dotgraph.get_nodes()) == 7
     assert len(dotgraph.get_edges()) == 9
     assert [n.get_label() for n in dotgraph.get_nodes()] == [
-        '"{ virfib(3) }"',
-        '"{ virfib(2) }"',
-        '"{ virfib(1) }"',
-        '"{ virfib(0) }"',
-        '"{ virfib(1) }"',
+        '"virfib(3)"',
+        '"virfib(2)"',
+        '"virfib(1)"',
+        '"virfib(0)"',
+        '"virfib(1)"',
         "Result",
         None,
     ]
@@ -76,9 +76,34 @@ def rev(lst, start, end):
     assert len(dotgraph.get_nodes()) == 4
     assert len(dotgraph.get_edges()) == 2
     assert [n.get_label() for n in dotgraph.get_nodes()] == [
-        '"{ rev([1, 2, 3, 4, 5], 0, 4) }"',
-        '"{ rev([5, 2, 3, 4, 1], 1, 3) }"',
-        '"{ rev([5, 4, 3, 2, 1], 2, 2) }"',
+        '"rev([1, 2, 3, 4, 5], 0, 4)"',
+        '"rev([5, 2, 3, 4, 1], 1, 3)"',
+        '"rev([5, 4, 3, 2, 1], 2, 2)"',
         None,
     ]
     assert [e.get_label() for e in dotgraph.get_edges()] == ['"(#1)"', '"(#2)"']
+
+
+def test_dict_args():
+    # Ensure that curly braces get escaped, since curly braces have meaning in dot graphs.
+
+    dict_def = """
+def finditem(obj, key):
+    if key in obj:
+      return obj[key]
+    for k, v in obj.items():
+        if isinstance(v, dict):
+            item = finditem(v, key)
+            if item is not None:
+                return item
+    """
+
+    dotgraph_str = rcviz.visualize(dict_def, "finditem({'B':1,'A': {'C': 2}},'C')")
+    dotgraph = pydot.graph_from_dot_data(dotgraph_str)[0]
+
+    assert [n.get_label() for n in dotgraph.get_nodes()] == [
+        "\"finditem(\\{'B': 1, 'A': \\{'C': 2\\}\\}, C)\"",
+        "\"finditem(\\{'C': 2\\}, C)\"",
+        "Result",
+        None,
+    ]
