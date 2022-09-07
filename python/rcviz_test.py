@@ -102,8 +102,8 @@ def finditem(obj, key):
     dotgraph = pydot.graph_from_dot_data(dotgraph_str)[0]
 
     assert [n.get_label() for n in dotgraph.get_nodes()] == [
-        '"finditem(\\{\'B\': 1, \'A\': \\{\'C\': 2\\}\\}, C)"',
-        '"finditem(\\{\'C\': 2\\}, C)"',
+        "\"finditem(\\{'B': 1, 'A': \\{'C': 2\\}\\}, C)\"",
+        "\"finditem(\\{'C': 2\\}, C)\"",
         "Result",
         None,
     ]
