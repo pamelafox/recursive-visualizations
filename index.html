@@ -108,7 +108,7 @@ def luhn_sum_double(n):
 
     </div>
     <!-- GraphViz WASM -->
-    <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm/dist/graphviz.umd.js"></script>
     <!-- Python WASM -->
     <script src="https://cdn.jsdelivr.net/pyodide/v0.19.0/full/pyodide.js"></script>
     <!-- Form functionality-->
@@ -145,7 +145,7 @@ def luhn_sum_double(n):
         const functionCall = document.getElementById('function-call-input').value;
         const dotGraph = pyodide.runPython(`visualize('''${functionDef}''', '''${functionCall}''')`);
         document.getElementById("visualize-status").innerHTML = "Rendering call graph...";
-        hpccWasm.graphvizSync().then(graphviz => {
+        hpccWasm.Graphviz.load().then(graphviz => {
               const div = document.getElementById("placeholder");
               div.innerHTML = graphviz.layout(dotGraph, "svg", "dot");
               new RecursiveTreeViz(div.querySelector('svg')).draw()
