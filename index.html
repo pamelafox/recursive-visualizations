@@ -143,12 +143,28 @@ def luhn_sum_double(n):
     var hpccWasm = window["@hpcc-js/wasm"];
     var pyodide;
 
+    function benchmark(func) {
+        const numTimes = 1000;
+        const start = Date.now();
+        for (var i = 0; i < numTimes; i++) {
+          func();
+        }
+        const end = Date.now();
+        const diff = (end - start) / numTimes;
+        console.log(`Running ${numTimes} times, average time is ${diff}ms`);
+    }
+
     function computeVisualization() {
         document.getElementById("visualize-status").innerHTML = "Computing call graph...";
         const functionDef = document.getElementById('function-definition-textarea').value;
         const functionCall = document.getElementById('function-call-input').value;
-        const dotGraph = pyodide.runPython(`visualize('''${functionDef}''', '''${functionCall}''')`);
-        document.getElementById("visualize-status").innerHTML = "Rendering call graph...";
+        
+        benchmark(() => {
+          pyodide.runPython(`visualize('''${functionDef}''', '''${functionCall}''')`);
+        });
+
+        //const dotGraph = pyodide.runPython(`visualize('''${functionDef}''', '''${functionCall}''')`);
+        /*document.getElementById("visualize-status").innerHTML = "Rendering call graph...";
         hpccWasm.Graphviz.load().then(graphviz => {
               const div = document.getElementById("placeholder");
               div.innerHTML = graphviz.layout(dotGraph, "svg", "dot");
@@ -158,6 +174,7 @@ def luhn_sum_double(n):
               document.getElementById("permalink-area").style.display = "block";
               document.getElementById("permalink-input").value = permalink;
         });
+        */
     }
 
     async function main() {
@@ -169,7 +186,8 @@ def luhn_sum_double(n):
       import micropip
       micropip.install('python/pydot-1.4.1-py2.py3-none-any.whl')
       `);
-      pyodide.runPython(await (await fetch("python/rcviz.py")).text());
+      const rcVizMod =await (await fetch("python/rcviz.py")).text();
+      await pyodide.runPythonAsync(rcVizMod);
       document.getElementById("visualize-status").innerHTML = "";
       document.getElementById("visualize-button").removeAttribute("disabled");
       document.getElementById("visualize-button").addEventListener("click", computeVisualization);
