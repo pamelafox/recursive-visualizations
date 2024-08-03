@@ -22,6 +22,7 @@ textarea,input[type=text] {
     <div class="container">
 
     <h1>Visualize a recursive function</h1>
+    <div id="function-code-container">
     <label>Try one of these functions:
       <select id="function-select">
         <option value="none">Choose one...</option>
@@ -42,6 +43,8 @@ textarea,input[type=text] {
     <br>
     <br>
     <button id="visualize-button" type="button" class="btn btn-primary" disabled>Visualize!</button>
+    </div>
+
     <span id="visualize-status">Loading libraries...</span>
     <pre style="display:none" id="virfib-definition">
 def virfib(n):
@@ -100,6 +103,8 @@ def luhn_sum_double(n):
 
     <div id="permalink-area" style="margin-top:12px; display:none;">
     <label for="permalink-input">Permalink:</label> <input type="url" id="permalink-input" style="width: 600px;">
+    <br>
+    Tip: Add &hide_function=true to hide the function code.
     </div>
 
     <div style="margin-top:80px;">
@@ -132,8 +137,10 @@ def luhn_sum_double(n):
     const urlParams = new URLSearchParams(window.location.search);
     const funcDef = urlParams.get('function_definition');
     const funcCall = urlParams.get('function_call');
+    const hideFunc = urlParams.get('hide_function');
     if (funcDef) document.getElementById('function-definition-textarea').value = funcDef;
     if (funcCall) document.getElementById('function-call-input').value = funcCall;
+    if (hideFunc == 'true') document.getElementById('function-code-container').style.display = "none";
     const readyToViz = funcDef && funcCall;
     </script>
     <!-- Python callgraph computation + Graphviz rendering-->
