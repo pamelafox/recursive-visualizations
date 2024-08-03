@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install ESLint
-        run: npm install eslint
+        run: npm install
       - name: Run ESLint
         run: npx eslint javascript/
