@@ -26,7 +26,7 @@ def test_visualize():
         '"virfib(1)"',
         '"virfib(0)"',
         '"virfib(1)"',
-        "Result"
+        "Result",
     ]
     assert [e.get_label() for e in dotgraph.get_edges()] == [
         '"(#1)"',
@@ -77,7 +77,7 @@ def rev(lst, start, end):
     assert [n.get_label() for n in dotgraph.get_nodes()] == [
         '"rev([1, 2, 3, 4, 5], 0, 4)"',
         '"rev([5, 2, 3, 4, 1], 1, 3)"',
-        '"rev([5, 4, 3, 2, 1], 2, 2)"'
+        '"rev([5, 4, 3, 2, 1], 2, 2)"',
     ]
     assert [e.get_label() for e in dotgraph.get_edges()] == ['"(#1)"', '"(#2)"']
 
@@ -102,5 +102,5 @@ def finditem(obj, key):
     assert [n.get_label() for n in dotgraph.get_nodes()] == [
         "\"finditem(\\{'B': 1, 'A': \\{'C': 2\\}\\}, C)\"",
         "\"finditem(\\{'C': 2\\}, C)\"",
-        "Result"
+        "Result",
     ]
