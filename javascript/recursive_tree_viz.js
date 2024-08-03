@@ -22,30 +22,28 @@ export class RecursiveTreeViz {
         for (let i = 0; i < edges.length; i++) {
             const edge = edges[i];
             const edgeTitle = edge.getElementsByTagName("title")[0].textContent;
-            if (edge.getElementsByTagName("text").length == 0) {
-                console.log(edge.innerHTML);
-                continue;
+            // Check for recently introduced bug in Graphviz where some edges have no text
+            if (edge.getElementsByTagName("text").length > 0) {
+                const edgeText = edge.getElementsByTagName("text")[0].textContent;
+                let stepNum, isReturn;
+                stepNum = parseInt(edgeText.split("(#")[1], 10);
+                if (edgeTitle.endsWith(":c")) {
+                    isReturn = true;
+                    edge.getElementsByTagName("text")[0].textContent = edgeText.split("(#")[0];
+                } else {
+                    edge.getElementsByTagName("text")[0].textContent = "";
+                    isReturn = false;
+                }
+                const edgeFrames = edgeTitle.split(":c")[0];
+                const parentFrameId = edgeFrames.split("->")[0];
+                const childFrameId = edgeFrames.split("->")[1];
+                this.steps[stepNum] = {
+                    parentFrame: this.frames[parentFrameId],
+                    childFrame: this.frames[childFrameId],
+                    edge: edge,
+                    isReturn: isReturn
+                };
             }
-            const edgeText = edge.getElementsByTagName("text")[0].textContent;
-
-            let stepNum, isReturn;
-            stepNum = parseInt(edgeText.split("(#")[1], 10);
-            if (edgeTitle.endsWith(":c")) {
-                isReturn = true;
-                edge.getElementsByTagName("text")[0].textContent = edgeText.split("(#")[0];
-            } else {
-                edge.getElementsByTagName("text")[0].textContent = "";
-                isReturn = false;
-            }
-            const edgeFrames = edgeTitle.split(":c")[0];
-            const parentFrameId = edgeFrames.split("->")[0];
-            const childFrameId = edgeFrames.split("->")[1];
-            this.steps[stepNum] = {
-                parentFrame: this.frames[parentFrameId],
-                childFrame: this.frames[childFrameId],
-                edge: edge,
-                isReturn: isReturn
-            };
         }
 
         if (this.startStep == null || isNaN(this.startStep)) {
