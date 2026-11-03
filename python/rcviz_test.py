@@ -3,7 +3,6 @@ import pydot
 
 import rcviz
 
-
 virfib_def = """
 def virfib(n):
   if n == 0:
